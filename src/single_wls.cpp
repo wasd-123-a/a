@@ -17,7 +17,9 @@ int main(int argc, char** argv)
     String disp_img = "../depth.png";   
     
     String dst_path = "../filtered_disparity.jpg";
-    String dst_raw_path = "../original_disparity.jpg"; // 原始视差图
+    String dst_raw_path = "../original_disparity.jpg"; // 原始
+
+    double filtering_time = (double)getTickCount();
     
     double lambda = 8000.0;              // 滤波强度参数（数值越大平滑越强）
     double sigma = 1.0;                  // 相似性阈值
@@ -38,18 +40,21 @@ int main(int argc, char** argv)
     }
  
     Mat disp_single;
-    switch (loaded_disp.channels()) 
-    {
-        case 1: disp_single = loaded_disp;  break;
-        case 3: cvtColor(loaded_disp, disp_single, COLOR_BGR2GRAY);  break;
-        case 4: cvtColor(loaded_disp, disp_single, COLOR_BGRA2GRAY);  break;
-        default:
-            Mat ch0;
-            extractChannel(loaded_disp, disp_single, 0);
-            disp_single = ch0;
+    // switch (loaded_disp.channels()) 
+    // {
+    //     case 1: 
+        disp_single = loaded_disp;
+    //     break;
+
+    //     case 3: cvtColor(loaded_disp, disp_single, COLOR_BGR2GRAY);  break;
+    //     case 4: cvtColor(loaded_disp, disp_single, COLOR_BGRA2GRAY);  break;
+    //     default:
+    //         Mat ch0;
+    //         extractChannel(loaded_disp, disp_single, 0);
+    //         disp_single = ch0;
             
-            break;
-    }
+    //         break;
+    // }
     
     // 转换为CV_16S格式
     Mat left_disp;
@@ -77,7 +82,6 @@ int main(int argc, char** argv)
     
 
     Mat filtered_disp;
-    double filtering_time = (double)getTickCount();
     
 
     wls_filter->filter(left_disp, left, filtered_disp, Mat(), ROI);

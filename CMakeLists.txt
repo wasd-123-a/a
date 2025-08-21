@@ -29,18 +29,18 @@ if(NOT OpenCV_ximgproc_FOUND)
         /usr/local/include/opencv4.2
         NO_DEFAULT_PATH
     )
-    if(OPENCV_XIMGPROC_INCLUDE_DIR)
-        message(STATUS "Found ximgproc headers at: ${OPENCV_XIMGPROC_INCLUDE_DIR}")
-    else()
-        message(FATAL_ERROR "OpenCV ximgproc module not found. Please install opencv-contrib-dev package:\nsudo apt install libopencv-contrib-dev")
-    endif()
+    
 endif()
 
-add_executable(disparity
-  ${CMAKE_SOURCE_DIR}/src/main.cpp
-)
+add_executable(disparity ${CMAKE_SOURCE_DIR}/src/main.cpp)
+add_executable(edge_detection ${CMAKE_SOURCE_DIR}/src/edge_detection.cpp)
+add_executable(bilateral_filter ${CMAKE_SOURCE_DIR}/src/bilateral_filter.cpp)
+add_executable(only_wls ${CMAKE_SOURCE_DIR}/src/only_wls.cpp)
+add_executable(single_wls ${CMAKE_SOURCE_DIR}/src/single_wls.cpp)
 
-target_link_libraries(disparity PRIVATE ${OpenCV_LIBS})
-target_include_directories(disparity PRIVATE ${OpenCV_INCLUDE_DIRS})
-
+set(EXECUTABLES disparity edge_detection bilateral_filter only_wls single_wls)
+foreach(EXE IN LISTS EXECUTABLES)
+    target_link_libraries(${EXE} PRIVATE ${OpenCV_LIBS})
+    target_include_directories(${EXE} PRIVATE ${OpenCV_INCLUDE_DIRS})
+endforeach()
 
